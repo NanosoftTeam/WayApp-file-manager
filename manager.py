@@ -4,9 +4,9 @@ import json
 from datetime import datetime
 
 #configuration
-program_path = ""
+program_path = "C:\\Users\\SzymonPC\\Documents\\!Repozytoria\\WayApp_console"
 communication_mode = "text"
-path_slash = ""
+path_slash = "" #path to manager.py file
 
 #System commands
 class System:
