@@ -45,7 +45,7 @@ class System:
         file = open(Program_path + "{slash_char}data{slash_char}data.json".format(slash_char = Path_slash), "w")
         file.write(json.dumps(system_data))
         file.close()
-        
+
     # Project data file
     @staticmethod
     def formatid(number):
@@ -119,19 +119,20 @@ class System:
             f = open(directory, "w")
             f.write(json.dumps(o))
             f.close()
-    
+
     # Fix files - later (it needs project index)
-    """
+
     def check_data_files():
         if not os.path.exists(Program_path):
             print("Błąd ścieżki programu")
             sys.exit("Error")
         System.check_directory(Program_path + "{slash_char}data".format(slash_char = Path_slash))
         System.add_file(Program_path + "{slash_char}data{slash_char}data.json".format(slash_char = Path_slash), { "last_project_id": 0, "last_task_id": 0, "login": "", "password": "" })
+    """
     def fix_project(id):
         if not os.path.exists(Program_path):
             print("Błąd ścieżki programu")
-        
+
         project_directory = Program_path + "{slash_char}data{slash_char}".format(slash_char = Path_slash) + System.formatid(int(id))
 
         project_default = json.dumps({ "name": "Project", "tasks": [], "tags": [] })
@@ -139,12 +140,12 @@ class System:
         if not os.path.exists(project_directory + "{slash_char}info.json".format(slash_char = Path_slash)):
             #write(project_directory + "{slash_char}info.json".format(slash_char = Path_slash), project_default)
             return
-        
+
         try:
             project_data = json.loads(System.read_file(project_directory + "{slash_char}info.json".format(slash_char = Path_slash)))
         except:
             System.write_file(project_directory + "{slash_char}info.json".format(slash_char = Path_slash), project_default)
-        
+
         project_data = json.loads(System.read_file(project_directory + "{slash_char}info.json".format(slash_char = Path_slash)))
 
         for element in ["name", "tasks", "tags"]:
@@ -155,7 +156,7 @@ class System:
                 System.write_file(project_directory + "{slash_char}info.json".format(slash_char = Path_slash), json.dumps(project_data))
         """
 # Check files before start - later
-# System.check_data_files()
+System.check_data_files()
 
 # Communication manager (print json or text)
 class Communication:
@@ -184,21 +185,21 @@ class Communication:
                     line = element + " "
                 line = line[:-1]
                 print(line)
-   
+
    # place for sync function
 
 #CRUD models - Project
 class Project:
     def __init__(self):
         """initialising project"""
-        
+
         self.name = ""
         self.tasks = []
         self.tags = []
         self.id = None #if project id = None, project doesn't have folder yet
     def find(self, id):
         """load project from files by id"""
-        
+
         self.directory = System.get_project_path(id)
         project_data = System.get_project_info_file(self)
         if(project_data != None):
@@ -211,7 +212,7 @@ class Project:
             return False
     def get(search = ""):
         """get list of project using searching"""
-        
+
         projects = []
         last_project_id = System.get_data()["last_project_id"]
         for i in range(1, last_project_id+1):
@@ -222,18 +223,18 @@ class Project:
         return projects
     def save(self):
         """save project data in files"""
-        
+
         if(self.id == None): #project hasn't been saved yet
             self.id = System.get_data()["last_project_id"]+1
             self.directory = Program_path + "{slash_char}data{slash_char}".format(slash_char = Path_slash)+System.formatid(self.id)
             System.check_directory(self.directory)
             System.update_data("last_project_id", self.id)
-        
+
         System.update_project_info_file(self)
-            
+
     def add_tag(self, tag_name):
         """add tag to the project"""
-        
+
         self.tags.append(tag_name)
         self.save()
     def delete_tag(self, tag_name):
@@ -248,7 +249,7 @@ class Project:
                 exit()
     def delete(self):
         """delete project"""
-        
+
         System.update_project_folder_name(self)
         self.id = None #user can't save deleted project
 
@@ -384,3 +385,4 @@ elif sys.argv[1] == "settings_authentication_update":
     Communication.print("Authentication data updated successfully")
 else:
     Communication.print("Unknown command", [], 1) #?
+
